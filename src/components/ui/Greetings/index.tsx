@@ -27,16 +27,16 @@ const Greetings: React.FC<IGreetings> = ({repoStarredData, isDataLoading}) => {
                 Most Starred repository
             </Typography>
             <Grid container spacing={3}>
-                <Grid item xs={6} md={3}>
+                <Grid item xs={12} sm={6} md={3}>
                     <InfoCard isLoading={isDataLoading} subtitle={"Name"} title={repoStarredData.firstRepoName}/>
                 </Grid> 
-                <Grid item xs={6} md={3}>
+                <Grid item xs={12} sm={6} md={3}>
                     <InfoCard isLoading={isDataLoading} Icon={StarIcon} subtitle={"Stars"} title={repoStarredData.firstStarCount}/>
                 </Grid> 
-                <Grid item xs={6} md={3}>   
+                <Grid item xs={12} sm={6} md={3}>   
                     <InfoCard isLoading={isDataLoading} Icon={BookIcon} subtitle={"Language"} title={repoStarredData.firstRepoLanguage}/>
                 </Grid>
-                <Grid item xs={6} md={3}>
+                <Grid item xs={12} sm={6} md={3}>
                     <InfoCard isLoading={isDataLoading} Icon={PersonIcon} subtitle={"Watchers"} title={repoStarredData.firstRepoWatchers}/>
                 </Grid>
             </Grid>

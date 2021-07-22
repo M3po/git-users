@@ -120,19 +120,19 @@ const Dashboard: React.FC = () =>  {
       { userData ?
 
         <Grid container spacing={3}>
-          <Grid item xs={6} md={3}>
+          <Grid item xs={12} sm={6} md={3}>
             <InfoCard Icon={PersonIcon} subtitle={"Name"} title={userData.displayName}/>
           </Grid>
 
-          <Grid item xs={6} md={3}>
+          <Grid item xs={12} sm={6} md={3}>
             <InfoCard Icon={BookIcon} subtitle={"Repositories"} title={userData.publicRepos}/>
           </Grid> 
 
-          <Grid item xs={6} md={3}>   
+          <Grid item xs={12} sm={6} md={3}>   
             <InfoCard Icon={PeopleIcon} subtitle={"Followers"} title={userData.displayFollowers}/>
           </Grid>
 
-          <Grid item xs={6} md={3}>
+          <Grid item xs={12} sm={6} md={3}>
             <InfoCard Icon={WorkIcon} subtitle={"Organizations"} title={orgCount}/>
           </Grid>
 

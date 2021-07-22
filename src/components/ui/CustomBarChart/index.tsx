@@ -16,15 +16,12 @@ const CustomBarChart: React.FC<IChart> = ({data, dataName, title}) => {
         <BarChart
           data={data}
           margin={{
-            top: theme.spacing(0),
-            right: theme.spacing(0),
-            left: theme.spacing(0),
             bottom: theme.spacing(3),
           }}
         >
           <CartesianGrid strokeDasharray="3 3 3" />
           <XAxis dataKey="name" />
-          <YAxis />
+          <YAxis allowDecimals={false}/>
           <Tooltip />
           <Legend />
           <Bar dataKey={"value"} name={dataName} fill={theme.palette.primary.main} />
