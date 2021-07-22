@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## About this project
+
+This project is using Github API for fetching repositories, users and organizations. Its main focus is on Rechart and Material-ui.
+
 ## Available Scripts
 
 In the project directory, you can run:
