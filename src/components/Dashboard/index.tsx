@@ -22,7 +22,7 @@ const INITIAL_REPOS_PAGE = 1
 const INITIAL_REPOS_ORDER_PROPERTY = "name"
 const INITIAL_REPOS_DIRECTION = "asc"
 
-const Dashboard = () =>  {
+const Dashboard: React.FC = () =>  {
 
   const [userData, setUserData] = React.useState<IUserData>();
   const [orgCount, setOrgCount] = React.useState<string>("0");
@@ -33,16 +33,21 @@ const Dashboard = () =>  {
   const [repositoryChart, setRepositoryChart] = React.useState<IData[]>([])
   const [repositoryStarredData, setRepositoryStarredData] = React.useState<IMostStarredData>(new IMostStarredData())
   const [repositoryStarredChart, setRepositoryStarredChart] = React.useState<IData[]>([])
+  const [isStatisticsLoading, setIsStatisticsLoading] = React.useState<boolean>(false)
+
   const usernameRef = React.useRef<string>("")
   const reposTableRef = React.useRef<IRepositoryTableRef>(null)
   
   React.useEffect(() => {
     (async () => {
+      setIsStatisticsLoading(true)
       try {
         const response = await getStatistics()
         setRepositoryStarredData(response)
         setRepositoryStarredChart(response.chartDataByLanguage())
+        setIsStatisticsLoading(false)
       } catch(e) {
+        setIsStatisticsLoading(false)
         setUserDataError({ message: e.message, key: new Date().getTime(), severity: e.severity })
       }
     })()
@@ -151,7 +156,7 @@ const Dashboard = () =>  {
           </Grid>
         </Grid>
       :
-        <Greetings repoStarredData={repositoryStarredData}/>
+        <Greetings isDataLoading={isStatisticsLoading} repoStarredData={repositoryStarredData}/>
       }
       </Container>
     </Box>

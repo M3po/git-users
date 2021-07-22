@@ -7,9 +7,10 @@ import { IMostStarredData } from "src/models/IRepository"
 
 export interface IGreetings {
     repoStarredData: IMostStarredData
+    isDataLoading: boolean
 }
 
-const Greetings: React.FC<IGreetings> = ({repoStarredData}) => {
+const Greetings: React.FC<IGreetings> = ({repoStarredData, isDataLoading}) => {
     const classes = useStyles()
     return (
         <>
@@ -27,16 +28,16 @@ const Greetings: React.FC<IGreetings> = ({repoStarredData}) => {
             </Typography>
             <Grid container spacing={3}>
                 <Grid item xs={6} md={3}>
-                    <InfoCard subtitle={"Name"} title={repoStarredData.firstRepoName}/>
+                    <InfoCard isLoading={isDataLoading} subtitle={"Name"} title={repoStarredData.firstRepoName}/>
                 </Grid> 
                 <Grid item xs={6} md={3}>
-                    <InfoCard Icon={StarIcon} subtitle={"Stars"} title={repoStarredData.firstStarCount}/>
+                    <InfoCard isLoading={isDataLoading} Icon={StarIcon} subtitle={"Stars"} title={repoStarredData.firstStarCount}/>
                 </Grid> 
                 <Grid item xs={6} md={3}>   
-                    <InfoCard Icon={BookIcon} subtitle={"Language"} title={repoStarredData.firstRepoLanguage}/>
+                    <InfoCard isLoading={isDataLoading} Icon={BookIcon} subtitle={"Language"} title={repoStarredData.firstRepoLanguage}/>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                    <InfoCard Icon={PersonIcon} subtitle={"Watchers"} title={repoStarredData.firstRepoWatchers}/>
+                    <InfoCard isLoading={isDataLoading} Icon={PersonIcon} subtitle={"Watchers"} title={repoStarredData.firstRepoWatchers}/>
                 </Grid>
             </Grid>
         </>

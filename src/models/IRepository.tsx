@@ -191,18 +191,18 @@ export class IMostStarredData {
     }
 
     get firstRepoName(): string {
-        return this._first ? this._first.name : ""
+        return this._first ? this._first.name : "Unknown"
     }
 
     get firstStarCount(): string {
-        return this._first ? _.toString(this._first.stargazers_count) : ""
+        return this._first ? _.toString(this._first.stargazers_count) : "0"
     }
 
     get firstRepoLanguage(): string {
-        return this._first && this._first.language ? this._first.language : ""
+        return this._first && this._first.language ? this._first.language : "Unknown"
     }
 
     get firstRepoWatchers() {
-        return this._first ? _.toString(this._first.watchers) : ""
+        return this._first ? _.toString(this._first.watchers) : "0"
     }
 }

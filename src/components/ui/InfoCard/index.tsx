@@ -5,9 +5,10 @@ export interface IInfoCard {
   title: string;
   subtitle: string;
   Icon?: SvgIconComponent
+  isLoading?: boolean
 }
 
-  const InfoCard:React.FC<IInfoCard> = ({title, subtitle, Icon}) => {
+  const InfoCard:React.FC<IInfoCard> = ({title, subtitle, Icon, isLoading}) => {
     const classes = useStyles();
 
     return (
@@ -24,7 +25,7 @@ export interface IInfoCard {
             >
               {subtitle}
             </Typography>
-            { title ?
+            { !isLoading ?
               <Typography
                 variant="h3"
               >
