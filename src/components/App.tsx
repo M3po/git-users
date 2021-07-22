@@ -1,11 +1,11 @@
 import { ThemeProvider } from '@material-ui/styles';
 import mainTheme from 'src/themes/mainTheme';
-import MainScreen from 'src/components/screens/MainScreen';
+import Dashboard from 'src/components/Dashboard';
 
 const App = () =>  { 
   return (
     <ThemeProvider theme={mainTheme}>
-      <MainScreen />
+      <Dashboard />
     </ThemeProvider>
   );
 }

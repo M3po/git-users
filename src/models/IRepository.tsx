@@ -1,6 +1,7 @@
 import { Deserialize } from "./deserialize";
 import _ from "lodash"
-import { IChartData } from "./IChart";
+import { IData } from "./common";
+import { IRepositoryTableData, IRepositoryTableDataProps, IRepositoryTableHeaderData } from "src/components/Dashboard/RepositoryTable/model";
 
 export interface ILicense {
     key: string
@@ -107,17 +108,79 @@ export interface IRepository {
     watchers_count: number
 }
 
+export interface IMostStarred{
+    incomplete_results: boolean
+    items: IRepository[]
+    total_count: number
+}
 
-export class IRepositoryChartData  {
-    private items: IRepository[] = [];
+
+
+
+export class IRepositoryData {
+    private _items: IRepository[] = [];
 
     constructor(data: IRepository[]) {
-        this.items = data;
+        if(data) {
+            this._items = data;
+        }
     }
 
-    get chartDataByLanguage(): IChartData[] {
+    private get _tableHeader(): IRepositoryTableHeaderData[] {
+        return [
+            {id: "name", label: "Name"}, 
+            {id: "language", label: "Language", hideSort: true},
+            {id: "created_at", label: "Created"},
+            {id: "updated_at", label: "Updated", hideSort: true},
+        ]
+    }
+
+    private get _tableData(): IRepositoryTableData[] {
+        return this.items.map(item => {
+            const picked = _.pick(item, _.map(this._tableHeader, "id"))
+            const dateCreated = new Date(item.created_at).toLocaleDateString();
+            const dateUpdated = new Date(item.updated_at).toLocaleDateString();
+            const language = (picked.language !== null) ? picked.language : this.languageDefaultValue
+            return { name: picked.name, language, created_at: dateCreated, updated_at: dateUpdated }
+        })
+    }
+
+    get items(): IRepository[] {
+        return this._items;
+    }
+
+    get languageDefaultValue(): string {
+        return "Uncategorized"
+    }
+
+    get chartDataByLanguage(): IData[] {
        return  _(this.items).countBy("language").map((value, key) => {
-            return {name: (key !== "null") ? key : "Uncategorized", value}
+            return {name: (key !== "null") ? key : this.languageDefaultValue, value}
        }).value();
     }
+    
+    get tableData(): IRepositoryTableDataProps {
+        return {
+            rowData: this._tableData,
+            headerData: this._tableHeader
+        }
+    }
+}
+
+export class MostStarredData {
+    private _items: IRepository[] = [];
+
+    constructor(data: IMostStarred) {
+        this._items = data.items
+    }
+
+    get languageDefaultValue(): string {
+        return "Uncategorized"
+    }
+
+    get chartDataByLanguage(): IData[] {
+        return  _(this._items).countBy("language").map((value, key) => {
+             return {name: (key !== "null") ? key : this.languageDefaultValue, value}
+        }).value();
+     }
 }

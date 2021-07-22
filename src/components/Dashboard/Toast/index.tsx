@@ -14,6 +14,7 @@ interface IToast {
 export interface ISnackbarMessage {
   message: string;
   key: number;
+  severity?: Color
 }
 
 const SlideTransition = (p: TransitionProps) => <Slide {...p}  direction='up' />
@@ -75,7 +76,7 @@ const Toast: React.FC<IToast> = ({message, severity}) => {
         TransitionComponent={SlideTransition}
       >
         {messageInfo && 
-        <Alert severity={severity}>
+        <Alert severity={messageInfo.severity ? messageInfo.severity : "error"}>
           {messageInfo?.message}
         </Alert>
         }

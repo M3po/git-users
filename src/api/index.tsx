@@ -1,17 +1,20 @@
 import axios from 'axios';
+import { IRepositoryTableData, IRepositoryTableOrder } from 'src/components/Dashboard/RepositoryTable/model';
 import { IOrganization } from 'src/models/IOrganization';
-import { IRepository }  from "src/models/IRepository";
+import { IMostStarred, IRepository }  from "src/models/IRepository";
 import { IUser } from "src/models/IUser";
+import { Color } from '@material-ui/lab/Alert';
+import CustomError from 'src/models/error';
 
-const USER_API = axios.create({
-  baseURL: `${process.env.REACT_APP_BASE_URL}/users`,
+const API = axios.create({
+  baseURL: `${process.env.REACT_APP_BASE_URL}`,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/vnd.github.v3+json'
   },
 });
 
-USER_API.interceptors.response.use(
+API.interceptors.response.use(
   response => response,
   error => {
     let message
@@ -22,9 +25,14 @@ USER_API.interceptors.response.use(
   } else {
       message = "There was an error with the request"
   }
-  return Promise.reject<string>(message)
+  return Promise.reject<{message: string, severity: Color}>({message})
   }
 );
+
+export interface IGetAllDataResponse2 {
+  user: IUser
+  orgs: IOrganization[]
+}
 
 export interface IGetAllDataResponse {
   user: IUser
@@ -33,14 +41,21 @@ export interface IGetAllDataResponse {
 }
 
 export interface IRepoParams {
-  sort?: "created" | "updated" | "pushed" | "full_name"
-  direction?: "asc" | "desc"
+  sort?: keyof IRepositoryTableData
+  direction?: IRepositoryTableOrder
   perPage?: number
   page?: number
 }
 
+const noUserNameError = (username: string ) => {
+  if(username === "") {
+    throw new CustomError("Please enter a username", "warning");
+  }
+}
+
 export const getUserRepos = async (username: string, params: IRepoParams): Promise<IRepository[]> => {
-  const user = await USER_API.get<IRepository[]>(`${username}/repos`, {
+  noUserNameError(username)
+  const user = await API.get<IRepository[]>(`users/${username}/repos`, {
     params: {
       per_page: params.perPage,
       page: params.page,
@@ -51,27 +66,42 @@ export const getUserRepos = async (username: string, params: IRepoParams): Promi
   return user.data;
 }
 
-export const getUserData = async (username: string, ReposPerPage: number = 100, ReposCurrentPage: number = 1): Promise<IGetAllDataResponse> => { //
-  const user = await USER_API.get<IUser>(username);
-  let [repos, orgs] = [[] as IRepository[],[] as IOrganization[]];
-  if(username) {
-      const [reposResponse, orgsResponse] = await Promise
-        .all([
-          USER_API.get<IRepository[]>(`${username}/repos`, {
-            params: {
-              per_page: ReposPerPage,
-              page: ReposCurrentPage
-            }
-          }),
-          USER_API.get<IOrganization[]>(`${username}/orgs`)
-        ]);
-      repos = reposResponse.data
-      orgs = orgsResponse.data
-    }
+export const getUserData = async (username: string): Promise<IGetAllDataResponse2> => { 
+  noUserNameError(username)
+  const user = await API.get<IUser>(`users/${username}`);
+  const orgs = await API.get<IOrganization[]>(`users/${username}/orgs`)
+      
     return ({
         user: user.data,
-        repos: repos,
-        orgs: orgs
+        orgs: orgs.data
     });
 }
 
+
+export const getStatistics = async (): Promise<IMostStarred> => {
+  const mostStarred = await API.get<IMostStarred>("search/repositories?q=stars:>1&sort=stars")
+  return mostStarred.data
+}
+
+export const getSearchData = async (username: string, repoParams: IRepoParams): Promise<IGetAllDataResponse> => { 
+  noUserNameError(username)
+  const user = await API.get<IUser>(`users/${username}`);
+      const [repos, orgs] = await Promise
+        .all([
+          API.get<IRepository[]>(`users/${username}/repos`, {
+            params: {
+              per_page: repoParams.perPage,
+              page: repoParams.page,
+              sort: repoParams.sort,
+              direction: repoParams.direction
+            }
+          }),
+          API.get<IOrganization[]>(`users/${username}/orgs`),
+          
+        ]);
+    return ({
+        user: user.data,
+        repos: repos.data,
+        orgs: orgs.data,
+    });
+}

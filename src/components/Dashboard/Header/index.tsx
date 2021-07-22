@@ -12,9 +12,10 @@ import { GitHub } from '@material-ui/icons';
 interface IHeader {
     onSearchSubmit: (searchText: string) => void
     isLoading: boolean
+    handleLogoClick: () => void
 }
 
-const Header: React.FC<IHeader> = ({onSearchSubmit, isLoading}) => {
+const Header: React.FC<IHeader> = ({onSearchSubmit, isLoading, handleLogoClick}) => {
   const classes = useStyles();
   const formik = useFormik({
     initialValues: {
@@ -27,9 +28,9 @@ const Header: React.FC<IHeader> = ({onSearchSubmit, isLoading}) => {
     <>
       <AppBar>
         <Toolbar className={classes.toolbar}>
-          <div className={classes.titleWrapper}>
+          <div className={classes.titleWrapper} onClick={handleLogoClick}>
             <GitHub />
-            <Typography className={classes.title} variant="h6" noWrap>
+            <Typography className={classes.title} variant="h4" noWrap>
               {process.env.REACT_APP_NAME}
             </Typography>
           </div>
@@ -52,8 +53,8 @@ const Header: React.FC<IHeader> = ({onSearchSubmit, isLoading}) => {
             />
           </div>
           <Button className={classes.buttonSubmit} color="secondary" variant="contained" type="submit">
-            { isLoading ? 
-              <CircularProgress className={classes.spinner} color="primary" size={'1.5rem'} thickness={5}/> 
+            { isLoading ?
+              <CircularProgress disableShrink className={classes.spinner} color="primary" size={'1.5rem'} thickness={5}/> 
               : 
               "Search" 
             }
@@ -75,6 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignItems: "center",
       flexGrow: 1,
       marginTop: theme.spacing(1),
+      cursor: "pointer",
      
        [theme.breakpoints.up('sm')]: {
         marginTop: 0,
@@ -125,6 +127,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     buttonSubmit: {
         marginLeft: theme.spacing(1),
+        minWidth: "88px"
       },
     formSubmit: {
        display: "flex",
@@ -141,11 +144,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
     spinner: {
-     paddingLeft: theme.spacing(1.995),
-     paddingRight: theme.spacing(1.995)
+     [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(2),
+      marginRight: theme.spacing(2),
+      },
     },
     headerOffset: {
-      ...theme.mixins.toolbar,
+      minHeight: "90px",
+      [theme.breakpoints.up('sm')]: {
+        ...theme.mixins.toolbar,
+      },
   },
   }));
 
