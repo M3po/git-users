@@ -1,6 +1,12 @@
-import { Avatar, Box, Card, CardContent, createStyles, Grid, makeStyles, Theme, Typography } from '@material-ui/core';
-import { IInfoCard } from './model';
+import { Avatar, Box, Card, CardContent, createStyles, Grid, LinearProgress, makeStyles, Theme, Typography } from '@material-ui/core';
+import { SvgIconComponent } from '@material-ui/icons';
   
+export interface IInfoCard {
+  title: string;
+  subtitle: string;
+  Icon?: SvgIconComponent
+}
+
   const InfoCard:React.FC<IInfoCard> = ({title, subtitle, Icon}) => {
     const classes = useStyles();
 
@@ -18,20 +24,25 @@ import { IInfoCard } from './model';
             >
               {subtitle}
             </Typography>
-            <Typography
-              variant="h3"
-            >
-              {title}
-            </Typography>
+            { title ?
+              <Typography
+                variant="h3"
+              >
+                {title}
+              </Typography>
+            :
+              <LinearProgress className={classes.progress}/> }
           </Grid>
-          <Grid className={classes.iconContainer} item xs>
-            <Box display="flex" justifyContent="flex-end">
-            <Avatar
-            >
-              <Icon />
-            </Avatar>
-            </Box>
-          </Grid>
+          { Icon !== undefined &&
+            <Grid className={classes.iconContainer} item xs>
+              <Box display="flex" justifyContent="flex-end">
+              <Avatar
+              >
+                <Icon />
+              </Avatar>
+              </Box>
+            </Grid>
+          }
         </Grid>
       </CardContent>
     </Card>
@@ -45,6 +56,11 @@ import { IInfoCard } from './model';
         display: "block"
       },
     },
+    progress: {
+      marginBottom: theme.spacing(1.3),
+      marginTop: theme.spacing(2.2),
+      width: theme.spacing(15)
+    }
   }),
 );
   

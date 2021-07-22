@@ -24,17 +24,23 @@ const Header: React.FC<IHeader> = ({onSearchSubmit, isLoading, handleLogoClick})
     onSubmit: (values) => onSearchSubmit(values.search),
   });
 
+  const handleToolbarClick = () => {
+    formik.setFieldValue("search", "")
+    handleLogoClick()
+  }
+
   return (
     <>
       <AppBar>
         <Toolbar className={classes.toolbar}>
-          <div className={classes.titleWrapper} onClick={handleLogoClick}>
+          <div className={classes.titleWrapper} onClick={handleToolbarClick}>
+            
             <GitHub />
             <Typography className={classes.title} variant="h4" noWrap>
               {process.env.REACT_APP_NAME}
             </Typography>
           </div>
-
+          <div className={classes.menuSpace} />
           <form className={classes.formSubmit} onSubmit={formik.handleSubmit}>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -71,10 +77,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     menuButton: {
       marginRight: theme.spacing(2),
     },
+    menuSpace: {
+      display: "flex",
+      flexGrow: 1,
+    },
     titleWrapper: {
       display: "flex",
       alignItems: "center",
-      flexGrow: 1,
       marginTop: theme.spacing(1),
       cursor: "pointer",
      

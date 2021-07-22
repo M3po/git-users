@@ -1,7 +1,6 @@
-import { Deserialize } from "./deserialize";
 import _ from "lodash"
 import { IData } from "./common";
-import { IRepositoryTableData, IRepositoryTableDataProps, IRepositoryTableHeaderData } from "src/components/Dashboard/RepositoryTable/model";
+import { IRepositoryTableData, IRepositoryTableDataProps, IRepositoryTableHeaderData } from "src/models/IRepositoryTable";
 
 export interface ILicense {
     key: string
@@ -135,7 +134,7 @@ export class IRepositoryData {
         ]
     }
 
-    private get _tableData(): IRepositoryTableData[] {
+    private _tableData(): IRepositoryTableData[] {
         return this.items.map(item => {
             const picked = _.pick(item, _.map(this._tableHeader, "id"))
             const dateCreated = new Date(item.created_at).toLocaleDateString();
@@ -153,7 +152,7 @@ export class IRepositoryData {
         return "Uncategorized"
     }
 
-    get chartDataByLanguage(): IData[] {
+    chartDataByLanguage(): IData[] {
        return  _(this.items).countBy("language").map((value, key) => {
             return {name: (key !== "null") ? key : this.languageDefaultValue, value}
        }).value();
@@ -161,16 +160,19 @@ export class IRepositoryData {
     
     get tableData(): IRepositoryTableDataProps {
         return {
-            rowData: this._tableData,
+            rowData: this._tableData(),
             headerData: this._tableHeader
         }
     }
 }
 
-export class MostStarredData {
+export class IMostStarredData {
     private _items: IRepository[] = [];
 
-    constructor(data: IMostStarred) {
+    constructor(data?: IMostStarred) {
+        if(!data) {
+            return
+        }
         this._items = data.items
     }
 
@@ -178,9 +180,29 @@ export class MostStarredData {
         return "Uncategorized"
     }
 
-    get chartDataByLanguage(): IData[] {
+    chartDataByLanguage(): IData[] {
         return  _(this._items).countBy("language").map((value, key) => {
              return {name: (key !== "null") ? key : this.languageDefaultValue, value}
         }).value();
-     }
+    }
+
+    private get _first(): IRepository | null {
+        return this._items && this._items[0] ? this._items[0] : null
+    }
+
+    get firstRepoName(): string {
+        return this._first ? this._first.name : ""
+    }
+
+    get firstStarCount(): string {
+        return this._first ? _.toString(this._first.stargazers_count) : ""
+    }
+
+    get firstRepoLanguage(): string {
+        return this._first && this._first.language ? this._first.language : ""
+    }
+
+    get firstRepoWatchers() {
+        return this._first ? _.toString(this._first.watchers) : ""
+    }
 }

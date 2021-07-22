@@ -1,3 +1,6 @@
+import _ from "lodash"
+import { Deserialize } from "./deserialize"
+
 export interface IOrganization {
     avatar_url: string
     description: string | null
@@ -12,3 +15,21 @@ export interface IOrganization {
     repos_url: string
     url: string
 }
+
+export class IOrganizationData extends Deserialize  {
+
+    items: IOrganization[] = []
+
+    constructor(data: IOrganization[]) {
+        super()
+        if(!data) {
+            return
+        }
+        this.items = data;
+    }
+
+    get count(): string {
+        return _.toString(this.items.length)
+    }
+}
+

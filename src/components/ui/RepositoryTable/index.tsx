@@ -8,10 +8,17 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import { IRepositoryTable, IRepositoryTableData, IRepositoryTableHeader, IRepositoryTableHeaderData, IRepositoryTableOrder, IRepositoryTableSort } from './model';
+import { IRepositoryTableData, IRepositoryTableDataProps, IRepositoryTableHeaderData, IRepositoryTableOrder } from 'src/models/IRepositoryTable';
 import { Backdrop, CircularProgress, Paper } from '@material-ui/core';
 
 const NUMBER_OF_ROWS_IN_VIEW = 7
+
+export interface IRepositoryTableHeader {
+  headerData: IRepositoryTableHeaderData[]
+  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof IRepositoryTableData) => void
+  order: IRepositoryTableOrder
+  orderBy: string
+}
 
 const RepositoryTableHeader: React.FC<IRepositoryTableHeader> = ({  headerData, onRequestSort, orderBy, order}) => {
   const classes = useStyles();
@@ -53,6 +60,17 @@ const RepositoryTableHeader: React.FC<IRepositoryTableHeader> = ({  headerData, 
 export interface IRepositoryTableRef {
   resetTableData: () => void
   tableScrollToTop: () => void
+}
+
+export interface IRepositoryTable {
+  data: IRepositoryTableDataProps
+  dataCount: number
+  initialPage: number
+  initialRowsPerPage: number
+  initialOrderDirection: IRepositoryTableOrder
+  initialOrderProperty: keyof IRepositoryTableData
+  handleTableAction: (page: number, rowsPerPage: number, order: IRepositoryTableOrder, orderBy: keyof IRepositoryTableData) => void
+  isLoading: boolean
 }
 
 export const RepositoryTable = React.forwardRef<IRepositoryTableRef, IRepositoryTable>(({dataCount, data, initialPage, initialRowsPerPage, initialOrderDirection, initialOrderProperty, handleTableAction, isLoading}, ref) => {

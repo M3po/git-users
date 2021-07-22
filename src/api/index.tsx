@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { IRepositoryTableData, IRepositoryTableOrder } from 'src/components/Dashboard/RepositoryTable/model';
-import { IOrganization } from 'src/models/IOrganization';
-import { IMostStarred, IRepository }  from "src/models/IRepository";
-import { IUser } from "src/models/IUser";
 import { Color } from '@material-ui/lab/Alert';
+import { IRepositoryTableData, IRepositoryTableOrder } from 'src/models/IRepositoryTable';
+import { IOrganization, IOrganizationData } from 'src/models/IOrganization';
+import { IMostStarred, IRepository, IRepositoryData, IMostStarredData }  from "src/models/IRepository";
+import { IUser, IUserData } from "src/models/IUser";
 import CustomError from 'src/models/error';
 
 const API = axios.create({
@@ -35,9 +35,9 @@ export interface IGetAllDataResponse2 {
 }
 
 export interface IGetAllDataResponse {
-  user: IUser
-  repos: IRepository[]
-  orgs: IOrganization[]
+  user: IUserData
+  repos: IRepositoryData
+  orgs: IOrganizationData
 }
 
 export interface IRepoParams {
@@ -53,9 +53,9 @@ const noUserNameError = (username: string ) => {
   }
 }
 
-export const getUserRepos = async (username: string, params: IRepoParams): Promise<IRepository[]> => {
+export const getUserRepos = async (username: string, params: IRepoParams): Promise<IRepositoryData> => {
   noUserNameError(username)
-  const user = await API.get<IRepository[]>(`users/${username}/repos`, {
+  const response = await API.get<IRepository[]>(`users/${username}/repos`, {
     params: {
       per_page: params.perPage,
       page: params.page,
@@ -63,7 +63,7 @@ export const getUserRepos = async (username: string, params: IRepoParams): Promi
       direction: params.direction
     }
   })
-  return user.data;
+  return new IRepositoryData(response.data);
 }
 
 export const getUserData = async (username: string): Promise<IGetAllDataResponse2> => { 
@@ -78,9 +78,9 @@ export const getUserData = async (username: string): Promise<IGetAllDataResponse
 }
 
 
-export const getStatistics = async (): Promise<IMostStarred> => {
+export const getStatistics = async (): Promise<IMostStarredData> => {
   const mostStarred = await API.get<IMostStarred>("search/repositories?q=stars:>1&sort=stars")
-  return mostStarred.data
+  return new IMostStarredData(mostStarred.data)
 }
 
 export const getSearchData = async (username: string, repoParams: IRepoParams): Promise<IGetAllDataResponse> => { 
@@ -100,8 +100,8 @@ export const getSearchData = async (username: string, repoParams: IRepoParams): 
           
         ]);
     return ({
-        user: user.data,
-        repos: repos.data,
-        orgs: orgs.data,
+        user: new IUserData(user.data),
+        repos: new IRepositoryData(repos.data),
+        orgs: new IOrganizationData(orgs.data),
     });
 }

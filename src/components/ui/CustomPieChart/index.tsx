@@ -1,14 +1,12 @@
-import { ResponsiveContainer, Cell, Pie, PieChart, PieLabel, Tooltip } from 'recharts';
-import { IData } from 'src/models/common';
-import theme from 'src/themes/mainTheme';
-import ChartContainer from '../ChartContainer';
-import { IChart } from '../CustomBarChart';
+import { Cell, Pie, PieChart, Tooltip } from 'recharts';
+import ChartContainer from 'src/components/ui/ChartContainer';
+import { IChart } from 'src/components/ui/CustomBarChart';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const CustomPieChart: React.FC<IChart> = ({data, title}) => {
     return (
-      <ChartContainer title={title}>
+      <ChartContainer title={title} height={230}>
         <PieChart >
           <Pie
             data={data}
@@ -19,7 +17,7 @@ const CustomPieChart: React.FC<IChart> = ({data, title}) => {
             dataKey="value"
             label
           >
-            {data.map((entry, index) => (
+            {data.map((_, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
