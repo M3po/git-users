@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## About this project
 
-This project is using Github API for fetching repositories, users and organizations. Its main focus is on Rechart and Material-ui.
+This project is using Github API for fetching repositories, users and organizations. Its focus is on Rechart and Material-ui.
 
 ## Available Scripts
 
